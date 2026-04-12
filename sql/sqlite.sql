@@ -896,4 +896,57 @@ UPDATE "sqlite_sequence" SET seq = 4 WHERE name = 'sys_role';
 -- ----------------------------
 UPDATE "sqlite_sequence" SET seq = 4 WHERE name = 'sys_user';
 
+-- ----------------------------
+-- Table structure for ai_platform_config
+-- ----------------------------
+DROP TABLE IF EXISTS "ai_platform_config";
+CREATE TABLE ai_platform_config (
+    config_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    platform_name VARCHAR(100) NOT NULL,
+    platform_code VARCHAR(50) NOT NULL UNIQUE,
+    api_key VARCHAR(500) NOT NULL,
+    api_secret VARCHAR(500),
+    api_url VARCHAR(500) NOT NULL,
+    model VARCHAR(100),
+    temperature DECIMAL(3,2) DEFAULT 0.7,
+    max_tokens INTEGER DEFAULT 2000,
+    status CHAR(1) DEFAULT '0',
+    remark VARCHAR(500),
+    create_by VARCHAR(64) DEFAULT '',
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_by VARCHAR(64) DEFAULT '',
+    update_time TIMESTAMP
+);
+
+-- ----------------------------
+-- Records of ai_platform_config
+-- ----------------------------
+INSERT INTO ai_platform_config (platform_name, platform_code, api_key, api_url, model, status, remark) 
+VALUES ('通义千问', 'qwen', 'your-qwen-api-key', 'https://dashscope.aliyuncs.com/api/v1/services/aigc/text-generation/generation', 'qwen-turbo', '1', '请配置真实的API密钥');
+
+INSERT INTO ai_platform_config (platform_name, platform_code, api_key, api_url, model, status, remark) 
+VALUES ('字节跳动-豆包', 'doubao', 'your-doubao-api-key', 'https://ark.cn-beijing.volces.com/api/v3/chat/completions', 'doubao-pro-4k', '1', '请配置真实的API密钥');
+
+INSERT INTO ai_platform_config (platform_name, platform_code, api_key, api_url, model, status, remark) 
+VALUES ('百度-元宝', 'yuanbao', 'your-yuanbao-api-key', 'https://aip.baidubce.com/rpc/2.0/ai_custom/v1/wenxinworkshop/chat/ernie-4.0-turbo-8k', 'ernie-4.0-turbo', '1', '请配置真实的API密钥');
+
+-- ----------------------------
+-- Table structure for ai_chat_record
+-- ----------------------------
+DROP TABLE IF EXISTS "ai_chat_record";
+CREATE TABLE ai_chat_record (
+    record_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    platform_code VARCHAR(50) NOT NULL,
+    model VARCHAR(100),
+    user_id BIGINT,
+    prompt TEXT NOT NULL,
+    response TEXT,
+    prompt_tokens INTEGER,
+    response_tokens INTEGER,
+    total_tokens INTEGER,
+    exec_time INTEGER,
+    error_msg VARCHAR(500),
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 PRAGMA foreign_keys = true;

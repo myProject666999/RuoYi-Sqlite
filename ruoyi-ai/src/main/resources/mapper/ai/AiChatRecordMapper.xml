@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ai.mapper.AiChatRecordMapper">
+
+    <resultMap type="AiChatRecord" id="AiChatRecordResult">
+        <id     property="recordId"        column="record_id"        />
+        <result property="platformCode"    column="platform_code"    />
+        <result property="model"           column="model"            />
+        <result property="userId"          column="user_id"          />
+        <result property="prompt"          column="prompt"           />
+        <result property="response"        column="response"         />
+        <result property="promptTokens"    column="prompt_tokens"    />
+        <result property="responseTokens"  column="response_tokens"  />
+        <result property="totalTokens"     column="total_tokens"     />
+        <result property="execTime"        column="exec_time"        />
+        <result property="errorMsg"        column="error_msg"        />
+        <result property="createTime"      column="create_time"      />
+    </resultMap>
+
+    <sql id="selectAiChatRecordVo">
+        select record_id, platform_code, model, user_id, prompt, response, prompt_tokens, response_tokens, total_tokens, exec_time, error_msg, create_time from ai_chat_record
+    </sql>
+
+    <select id="selectAiChatRecordByRecordId" parameterType="Long" resultMap="AiChatRecordResult">
+        <include refid="selectAiChatRecordVo"/>
+        where record_id = #{recordId}
+    </select>
+
+    <select id="selectAiChatRecordList" parameterType="AiChatRecord" resultMap="AiChatRecordResult">
+        <include refid="selectAiChatRecordVo"/>
+        <where>
+            <if test="platformCode != null and platformCode != ''">
+                AND platform_code = #{platformCode}
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <insert id="insertAiChatRecord" parameterType="AiChatRecord" useGeneratedKeys="true" keyProperty="recordId">
+        insert into ai_chat_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platformCode != null">platform_code,</if>
+            <if test="model != null">model,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="prompt != null">prompt,</if>
+            <if test="response != null">response,</if>
+            <if test="promptTokens != null">prompt_tokens,</if>
+            <if test="responseTokens != null">response_tokens,</if>
+            <if test="totalTokens != null">total_tokens,</if>
+            <if test="execTime != null">exec_time,</if>
+            <if test="errorMsg != null">error_msg,</if>
+            <if test="createTime != null">create_time,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platformCode != null">#{platformCode},</if>
+            <if test="model != null">#{model},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="prompt != null">#{prompt},</if>
+            <if test="response != null">#{response},</if>
+            <if test="promptTokens != null">#{promptTokens},</if>
+            <if test="responseTokens != null">#{responseTokens},</if>
+            <if test="totalTokens != null">#{totalTokens},</if>
+            <if test="execTime != null">#{execTime},</if>
+            <if test="errorMsg != null">#{errorMsg},</if>
+            <if test="createTime != null">#{createTime},</if>
+        </trim>
+    </insert>
+
+    <delete id="deleteAiChatRecordByRecordId" parameterType="Long">
+        delete from ai_chat_record where record_id = #{recordId}
+    </delete>
+
+    <delete id="deleteAiChatRecordByRecordIds" parameterType="java.lang.Long[]">
+        delete from ai_chat_record where record_id in
+        <foreach item="recordId" collection="array" open="(" separator="," close=")">
+            #{recordId}
+        </foreach>
+    </delete>
+
+</mapper>

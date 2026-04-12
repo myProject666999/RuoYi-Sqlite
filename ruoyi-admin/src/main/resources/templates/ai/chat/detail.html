@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" >
+<head>
+	<th:block th:include="include :: header('AI对话详情')" />
+</head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-chat-detail" th:object="${aiChat}">
+        <div class="form-group">	
+            <label class="col-sm-3 control-label">平台名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" th:field="*{platformName}" readonly>
+            </div>
+        </div>
+        <div class="form-group">	
+            <label class="col-sm-3 control-label">模型名称：</label>
+            <div class="col-sm-8">
+                <input class="form-control" th:field="*{modelName}" readonly>
+            </div>
+        </div>
+        <div class="form-group">	
+            <label class="col-sm-3 control-label">用户问题：</label>
+            <div class="col-sm-8">
+                <textarea class="form-control" th:field="*{userMessage}" readonly rows="5"></textarea>
+            </div>
+        </div>
+        <div class="form-group">	
+            <label class="col-sm-3 control-label">AI回答：</label>
+            <div class="col-sm-8">
+                <textarea class="form-control" th:field="*{aiResponse}" readonly rows="10"></textarea>
+            </div>
+        </div>
+        <div class="form-group">	
+            <label class="col-sm-3 control-label">消耗Tokens：</label>
+            <div class="col-sm-8">
+                <input class="form-control" th:field="*{totalTokens}" readonly>
+            </div>
+        </div>
+        <div class="form-group">	
+            <label class="col-sm-3 control-label">用户：</label>
+            <div class="col-sm-8">
+                <input class="form-control" th:field="*{userName}" readonly>
+            </div>
+        </div>
+        <div class="form-group">	
+            <label class="col-sm-3 control-label">创建时间：</label>
+            <div class="col-sm-8">
+                <input class="form-control" th:field="*{createTime}" readonly>
+            </div>
+        </div>
+    </form>
+    </div>
+    <th:block th:include="include :: footer" />
+</body>
+</html>

@@ -26,12 +26,16 @@ COPY ruoyi-admin/src/main/resources/application-docker.yml /app/application-dock
 
 # 复制 SQL 初始化脚本
 COPY sql/sqlite.sql /app/sql/sqlite.sql
+COPY data/ai_init.sql /app/sql/ai_init.sql
 
 # 创建数据目录和上传文件目录
 RUN mkdir -p /app/data /app/uploadPath
 
 # 初始化 SQLite 数据库
 RUN sqlite3 /app/data/ruoyi.db < /app/sql/sqlite.sql
+
+# 初始化 AI 模块数据库表
+RUN sqlite3 /app/data/ruoyi.db < /app/sql/ai_init.sql
 
 # 暴露端口
 EXPOSE 80

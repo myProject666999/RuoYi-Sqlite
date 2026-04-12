@@ -1,0 +1,42 @@
+# Git
+.git
+.gitignore
+
+# IDE
+.idea
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings
+.vscode
+
+# Build
+target
+!**/target/*.jar
+*.class
+
+# Logs
+*.log
+logs
+
+# Documentation
+doc
+*.md
+
+# Scripts
+bin
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+Dockerfile
+.dockerignore
+docker-compose.yml
+
+# Other
+*.zip
+*.tar.gz

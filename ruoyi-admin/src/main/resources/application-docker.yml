@@ -1,0 +1,5 @@
+# 数据源配置
+spring:
+    datasource:
+        url: jdbc:sqlite:/app/data/ruoyi.db
+        driverClassName: org.sqlite.JDBC

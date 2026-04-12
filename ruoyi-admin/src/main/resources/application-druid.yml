@@ -3,5 +3,5 @@ spring:
     datasource:
         #type: com.alibaba.druid.pool.DruidDataSource
         #driverClassName: com.mysql.cj.jdbc.Driver
-        url: jdbc:sqlite:D:\sqllite\csfw.db
+        url: jdbc:sqlite:./data/ruoyi.db
         driverClassName: org.sqlite.JDBC

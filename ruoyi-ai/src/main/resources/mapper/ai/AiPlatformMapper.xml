@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ai.mapper.AiPlatformMapper">
+
+    <resultMap type="com.ruoyi.ai.domain.AiPlatform" id="AiPlatformResult">
+        <id property="platformId" column="platform_id"/>
+        <result property="platformName" column="platform_name"/>
+        <result property="platformCode" column="platform_code"/>
+        <result property="apiBaseUrl" column="api_base_url"/>
+        <result property="apiKey" column="api_key"/>
+        <result property="modelName" column="model_name"/>
+        <result property="status" column="status"/>
+        <result property="sortOrder" column="sort_order"/>
+        <result property="remark" column="remark"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectAiPlatformVo">
+        select platform_id, platform_name, platform_code, api_base_url, api_key, model_name, status, sort_order, remark, create_by, create_time, update_by, update_time
+        from ai_platform
+    </sql>
+
+    <select id="selectAiPlatformList" parameterType="com.ruoyi.ai.domain.AiPlatform" resultMap="AiPlatformResult">
+        <include refid="selectAiPlatformVo"/>
+        <where>
+            <if test="platformName != null and platformName != ''">
+                AND platform_name like concat('%', #{platformName}, '%')
+            </if>
+            <if test="platformCode != null and platformCode != ''">
+                AND platform_code = #{platformCode}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        order by sort_order asc, platform_id asc
+    </select>
+
+    <select id="selectAiPlatformById" parameterType="Long" resultMap="AiPlatformResult">
+        <include refid="selectAiPlatformVo"/>
+        where platform_id = #{platformId}
+    </select>
+
+    <select id="selectAiPlatformByCode" parameterType="String" resultMap="AiPlatformResult">
+        <include refid="selectAiPlatformVo"/>
+        where platform_code = #{platformCode}
+    </select>
+
+    <select id="selectEnabledPlatforms" resultMap="AiPlatformResult">
+        <include refid="selectAiPlatformVo"/>
+        where status = '0'
+        order by sort_order asc, platform_id asc
+    </select>
+
+    <insert id="insertAiPlatform" parameterType="com.ruoyi.ai.domain.AiPlatform" useGeneratedKeys="true" keyProperty="platformId">
+        insert into ai_platform
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platformName != null and platformName != ''">platform_name,</if>
+            <if test="platformCode != null and platformCode != ''">platform_code,</if>
+            <if test="apiBaseUrl != null and apiBaseUrl != ''">api_base_url,</if>
+            <if test="apiKey != null and apiKey != ''">api_key,</if>
+            <if test="modelName != null and modelName != ''">model_name,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="sortOrder != null">sort_order,</if>
+            <if test="remark != null and remark != ''">remark,</if>
+            <if test="createBy != null and createBy != ''">create_by,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platformName != null and platformName != ''">#{platformName},</if>
+            <if test="platformCode != null and platformCode != ''">#{platformCode},</if>
+            <if test="apiBaseUrl != null and apiBaseUrl != ''">#{apiBaseUrl},</if>
+            <if test="apiKey != null and apiKey != ''">#{apiKey},</if>
+            <if test="modelName != null and modelName != ''">#{modelName},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="sortOrder != null">#{sortOrder},</if>
+            <if test="remark != null and remark != ''">#{remark},</if>
+            <if test="createBy != null and createBy != ''">#{createBy},</if>
+            datetime('now','localtime')
+        </trim>
+    </insert>
+
+    <update id="updateAiPlatform" parameterType="com.ruoyi.ai.domain.AiPlatform">
+        update ai_platform
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platformName != null and platformName != ''">platform_name = #{platformName},</if>
+            <if test="platformCode != null and platformCode != ''">platform_code = #{platformCode},</if>
+            <if test="apiBaseUrl != null and apiBaseUrl != ''">api_base_url = #{apiBaseUrl},</if>
+            <if test="apiKey != null">api_key = #{apiKey},</if>
+            <if test="modelName != null and modelName != ''">model_name = #{modelName},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="sortOrder != null">sort_order = #{sortOrder},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="updateBy != null and updateBy != ''">update_by = #{updateBy},</if>
+            update_time = datetime('now','localtime')
+        </trim>
+        where platform_id = #{platformId}
+    </update>
+
+    <delete id="deleteAiPlatformById" parameterType="Long">
+        delete from ai_platform where platform_id = #{platformId}
+    </delete>
+
+    <delete id="deleteAiPlatformByIds" parameterType="Long">
+        delete from ai_platform where platform_id in
+        <foreach collection="array" item="platformId" open="(" separator="," close=")">
+            #{platformId}
+        </foreach>
+    </delete>
+
+</mapper>

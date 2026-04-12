@@ -5,7 +5,7 @@ FROM eclipse-temurin:8-jre-alpine
 
 # 维护者信息
 LABEL maintainer="ruoyi"
-LABEL description="若依管理系统"
+LABEL description="若依管理系统 - 集成AI模块"
 
 # 安装必要的工具、字体库和 AWT 支持
 RUN apk add --no-cache curl tzdata sqlite fontconfig ttf-dejavu \
@@ -26,6 +26,7 @@ COPY ruoyi-admin/src/main/resources/application-docker.yml /app/application-dock
 
 # 复制 SQL 初始化脚本
 COPY sql/sqlite.sql /app/sql/sqlite.sql
+COPY ruoyi-ai/src/main/resources/sql/ai_init.sql /app/sql/ai_init.sql
 
 # 创建数据目录和上传文件目录
 RUN mkdir -p /app/data /app/uploadPath

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ai.mapper.AiChatMapper">
+    
+    <resultMap type="com.ruoyi.ai.domain.AiChat" id="AiChatResult">
+        <id     property="chatId"       column="chat_id"       />
+        <result property="platformId"   column="platform_id"   />
+        <result property="platformName" column="platform_name" />
+        <result property="modelName"    column="model_name"    />
+        <result property="userMessage"  column="user_message"  />
+        <result property="aiResponse"   column="ai_response"   />
+        <result property="totalTokens"  column="total_tokens"  />
+        <result property="userId"       column="user_id"       />
+        <result property="userName"     column="user_name"     />
+        <result property="createTime"   column="create_time"   />
+        <result property="remark"       column="remark"        />
+    </resultMap>
+    
+    <sql id="selectAiChatVo">
+        select chat_id, platform_id, platform_name, model_name, user_message, ai_response, total_tokens, user_id, user_name, create_time, remark 
+        from ai_chat
+    </sql>
+    
+    <select id="selectAiChatById" parameterType="Long" resultMap="AiChatResult">
+        <include refid="selectAiChatVo"/>
+        where chat_id = #{chatId}
+    </select>
+    
+    <select id="selectAiChatList" parameterType="com.ruoyi.ai.domain.AiChat" resultMap="AiChatResult">
+        <include refid="selectAiChatVo"/>
+        <where>
+            <if test="platformId != null">
+                AND platform_id = #{platformId}
+            </if>
+            <if test="platformName != null and platformName != ''">
+                AND platform_name like '%'||#{platformName}||'%'
+            </if>
+            <if test="modelName != null and modelName != ''">
+                AND model_name like '%'||#{modelName}||'%'
+            </if>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+    
+    <insert id="insertAiChat" parameterType="com.ruoyi.ai.domain.AiChat" useGeneratedKeys="true" keyProperty="chatId">
+        insert into ai_chat
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="platformId != null">platform_id,</if>
+            <if test="platformName != null">platform_name,</if>
+            <if test="modelName != null">model_name,</if>
+            <if test="userMessage != null">user_message,</if>
+            <if test="aiResponse != null">ai_response,</if>
+            <if test="totalTokens != null">total_tokens,</if>
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="remark != null">remark,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="platformId != null">#{platformId},</if>
+            <if test="platformName != null">#{platformName},</if>
+            <if test="modelName != null">#{modelName},</if>
+            <if test="userMessage != null">#{userMessage},</if>
+            <if test="aiResponse != null">#{aiResponse},</if>
+            <if test="totalTokens != null">#{totalTokens},</if>
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="remark != null">#{remark},</if>
+        </trim>
+    </insert>
+    
+    <update id="updateAiChat" parameterType="com.ruoyi.ai.domain.AiChat">
+        update ai_chat
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="platformId != null">platform_id = #{platformId},</if>
+            <if test="platformName != null">platform_name = #{platformName},</if>
+            <if test="modelName != null">model_name = #{modelName},</if>
+            <if test="userMessage != null">user_message = #{userMessage},</if>
+            <if test="aiResponse != null">ai_response = #{aiResponse},</if>
+            <if test="totalTokens != null">total_tokens = #{totalTokens},</if>
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="remark != null">remark = #{remark},</if>
+        </trim>
+        where chat_id = #{chatId}
+    </update>
+    
+    <delete id="deleteAiChatById" parameterType="Long">
+        delete from ai_chat where chat_id = #{chatId}
+    </delete>
+    
+    <delete id="deleteAiChatByIds" parameterType="String">
+        delete from ai_chat where chat_id in 
+        <foreach item="chatId" collection="array" open="(" separator="," close=")">
+            #{chatId}
+        </foreach>
+    </delete>
+    
+</mapper>

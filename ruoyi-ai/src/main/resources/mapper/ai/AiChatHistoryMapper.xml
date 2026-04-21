@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.ai.mapper.AiChatHistoryMapper">
+
+    <resultMap type="com.ruoyi.ai.domain.AiChatHistory" id="AiChatHistoryResult">
+        <id property="historyId" column="history_id"/>
+        <result property="userId" column="user_id"/>
+        <result property="platformId" column="platform_id"/>
+        <result property="platformName" column="platform_name"/>
+        <result property="sessionId" column="session_id"/>
+        <result property="userMessage" column="user_message"/>
+        <result property="aiResponse" column="ai_response"/>
+        <result property="promptTokens" column="prompt_tokens"/>
+        <result property="completionTokens" column="completion_tokens"/>
+        <result property="totalTokens" column="total_tokens"/>
+        <result property="responseTime" column="response_time"/>
+        <result property="status" column="status"/>
+        <result property="errorMsg" column="error_msg"/>
+        <result property="createTime" column="create_time"/>
+    </resultMap>
+
+    <sql id="selectAiChatHistoryVo">
+        select history_id, user_id, platform_id, platform_name, session_id, user_message, ai_response,
+               prompt_tokens, completion_tokens, total_tokens, response_time, status, error_msg, create_time
+        from ai_chat_history
+    </sql>
+
+    <select id="selectAiChatHistoryList" parameterType="com.ruoyi.ai.domain.AiChatHistory" resultMap="AiChatHistoryResult">
+        <include refid="selectAiChatHistoryVo"/>
+        <where>
+            <if test="userId != null">
+                AND user_id = #{userId}
+            </if>
+            <if test="platformId != null">
+                AND platform_id = #{platformId}
+            </if>
+            <if test="platformName != null and platformName != ''">
+                AND platform_name like concat('%', #{platformName}, '%')
+            </if>
+            <if test="sessionId != null and sessionId != ''">
+                AND session_id = #{sessionId}
+            </if>
+            <if test="status != null and status != ''">
+                AND status = #{status}
+            </if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectAiChatHistoryById" parameterType="Long" resultMap="AiChatHistoryResult">
+        <include refid="selectAiChatHistoryVo"/>
+        where history_id = #{historyId}
+    </select>
+
+    <select id="selectAiChatHistoryBySessionId" parameterType="String" resultMap="AiChatHistoryResult">
+        <include refid="selectAiChatHistoryVo"/>
+        where session_id = #{sessionId}
+        order by create_time asc
+    </select>
+
+    <insert id="insertAiChatHistory" parameterType="com.ruoyi.ai.domain.AiChatHistory" useGeneratedKeys="true" keyProperty="historyId">
+        insert into ai_chat_history
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="platformId != null">platform_id,</if>
+            <if test="platformName != null and platformName != ''">platform_name,</if>
+            <if test="sessionId != null and sessionId != ''">session_id,</if>
+            <if test="userMessage != null and userMessage != ''">user_message,</if>
+            <if test="aiResponse != null and aiResponse != ''">ai_response,</if>
+            <if test="promptTokens != null">prompt_tokens,</if>
+            <if test="completionTokens != null">completion_tokens,</if>
+            <if test="totalTokens != null">total_tokens,</if>
+            <if test="responseTime != null">response_time,</if>
+            <if test="status != null and status != ''">status,</if>
+            <if test="errorMsg != null and errorMsg != ''">error_msg,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="platformId != null">#{platformId},</if>
+            <if test="platformName != null and platformName != ''">#{platformName},</if>
+            <if test="sessionId != null and sessionId != ''">#{sessionId},</if>
+            <if test="userMessage != null and userMessage != ''">#{userMessage},</if>
+            <if test="aiResponse != null and aiResponse != ''">#{aiResponse},</if>
+            <if test="promptTokens != null">#{promptTokens},</if>
+            <if test="completionTokens != null">#{completionTokens},</if>
+            <if test="totalTokens != null">#{totalTokens},</if>
+            <if test="responseTime != null">#{responseTime},</if>
+            <if test="status != null and status != ''">#{status},</if>
+            <if test="errorMsg != null and errorMsg != ''">#{errorMsg},</if>
+            datetime('now','localtime')
+        </trim>
+    </insert>
+
+    <update id="updateAiChatHistory" parameterType="com.ruoyi.ai.domain.AiChatHistory">
+        update ai_chat_history
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="platformId != null">platform_id = #{platformId},</if>
+            <if test="platformName != null and platformName != ''">platform_name = #{platformName},</if>
+            <if test="sessionId != null and sessionId != ''">session_id = #{sessionId},</if>
+            <if test="userMessage != null and userMessage != ''">user_message = #{userMessage},</if>
+            <if test="aiResponse != null and aiResponse != ''">ai_response = #{aiResponse},</if>
+            <if test="promptTokens != null">prompt_tokens = #{promptTokens},</if>
+            <if test="completionTokens != null">completion_tokens = #{completionTokens},</if>
+            <if test="totalTokens != null">total_tokens = #{totalTokens},</if>
+            <if test="responseTime != null">response_time = #{responseTime},</if>
+            <if test="status != null and status != ''">status = #{status},</if>
+            <if test="errorMsg != null">error_msg = #{errorMsg},</if>
+        </trim>
+        where history_id = #{historyId}
+    </update>
+
+    <delete id="deleteAiChatHistoryById" parameterType="Long">
+        delete from ai_chat_history where history_id = #{historyId}
+    </delete>
+
+    <delete id="deleteAiChatHistoryByIds" parameterType="Long">
+        delete from ai_chat_history where history_id in
+        <foreach collection="array" item="historyId" open="(" separator="," close=")">
+            #{historyId}
+        </foreach>
+    </delete>
+
+    <delete id="deleteAiChatHistoryBySessionId" parameterType="String">
+        delete from ai_chat_history where session_id = #{sessionId}
+    </delete>
+
+</mapper>
